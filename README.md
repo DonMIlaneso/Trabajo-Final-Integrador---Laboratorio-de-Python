@@ -77,3 +77,9 @@ ventas.json
 ```
 
 Cuando se confirma una compra o se cancela una venta, el archivo se actualiza. Al iniciar nuevamente el programa, se cargan las ventas anteriores y se recalculan los cupos ocupados de cada sector.
+
+## Uso de Inteligencia Artificial
+
+Se utilizó Codex como herramienta de apoyo durante el desarrollo del proyecto. La IA fue utilizada para generar una estructura inicial del sistema, proponer funciones, organizar la modularización, revisar validaciones, mejorar mensajes al usuario y colaborar en la documentación del README.
+
+El código final fue revisado, probado y adaptado por el grupo. Todos los integrantes deben comprender la lógica implementada, las funciones utilizadas, las validaciones realizadas, el manejo de errores, los acumuladores, los contadores y el funcionamiento general del sistema.
