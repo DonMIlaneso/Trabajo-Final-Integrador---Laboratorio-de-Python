@@ -7,8 +7,12 @@ diccionarios, listas, funciones, condicionales, ciclos, acumuladores,
 contadores y validaciones.
 """
 
+import json
+from pathlib import Path
 from datetime import datetime
 
+
+ARCHIVO_VENTAS = Path(__file__).with_name("ventas.json")
 
 EVENTO = {
     "nombre": "Noche de Rock Nacional",
@@ -31,6 +35,45 @@ PROMOCIONES = {
 
 MEDIOS_PAGO = ["EFECTIVO", "DEBITO", "CREDITO", "TRANSFERENCIA"]
 ventas = []
+
+
+def cargar_ventas():
+    if not ARCHIVO_VENTAS.exists():
+        return []
+
+    try:
+        with open(ARCHIVO_VENTAS, "r", encoding="utf-8") as archivo:
+            datos = json.load(archivo)
+            if isinstance(datos, list):
+                return datos
+            print("Aviso: el archivo de ventas no tiene el formato esperado.")
+            return []
+    except json.JSONDecodeError:
+        print("Aviso: no se pudo leer ventas.json porque contiene datos invalidos.")
+        return []
+    except OSError:
+        print("Aviso: no se pudo acceder al archivo de ventas.")
+        return []
+
+
+def guardar_ventas():
+    try:
+        with open(ARCHIVO_VENTAS, "w", encoding="utf-8") as archivo:
+            json.dump(ventas, archivo, indent=4, ensure_ascii=False)
+    except OSError:
+        print("Aviso: no se pudieron guardar las ventas en el archivo.")
+
+
+def actualizar_cupos_desde_ventas():
+    for sector in SECTORES.values():
+        sector["vendidas"] = 0
+
+    for venta in ventas:
+        sector = venta.get("sector")
+        estado = venta.get("estado")
+        cantidad = venta.get("cantidad", 0)
+        if estado == "ACTIVA" and sector in SECTORES:
+            SECTORES[sector]["vendidas"] += cantidad
 
 
 def mostrar_titulo():
@@ -198,6 +241,7 @@ def comprar_entradas():
     }
     ventas.append(venta)
     SECTORES[codigo_sector]["vendidas"] += cantidad
+    guardar_ventas()
     print(f"Venta registrada correctamente. Codigo: {venta['codigo']}")
 
 
@@ -233,6 +277,7 @@ def cancelar_venta():
                 return
             venta["estado"] = "CANCELADA"
             SECTORES[venta["sector"]]["vendidas"] -= venta["cantidad"]
+            guardar_ventas()
             print("Venta cancelada y cupos liberados correctamente.")
             return
     print("Error: no se encontro una venta con ese codigo.")
@@ -301,7 +346,10 @@ def mostrar_estadisticas():
 
 
 def ejecutar_sistema():
+    ventas.extend(cargar_ventas())
+    actualizar_cupos_desde_ventas()
     mostrar_titulo()
+    print(f"Archivo de ventas: {ARCHIVO_VENTAS.name}")
     while True:
         mostrar_menu()
         opcion = pedir_opcion(1, 6)
