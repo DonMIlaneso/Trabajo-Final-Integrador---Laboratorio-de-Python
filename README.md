@@ -9,6 +9,7 @@ Sistema por consola que permite administrar la venta de entradas para distintos 
 - Caballero Lara
 - Hanke Valentin
 - Lazcano Francisco
+- Vallarino Daniel
 - Vallejos Belinda
 
 ## Comision
