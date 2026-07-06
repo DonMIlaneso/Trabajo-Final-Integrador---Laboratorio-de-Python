@@ -6,13 +6,13 @@ Sistema por consola que permite administrar la venta de entradas para un recital
 
 ## Integrantes
 
-- Completar integrante 1
-- Completar integrante 2
-- Completar integrante 3
+Caballero Lara
+Hanke Valentin
+Lazcano Francisco
 
 ## Comision
 
-Completar comision.
+AED 1.1
 
 ## Funcionalidades
 
@@ -26,15 +26,6 @@ Completar comision.
 - Listado de ventas realizadas.
 - Estadisticas de ventas, recaudacion, ocupacion y sector mas demandado.
 
-## Modalidad de trabajo segun la consigna
-
-- El trabajo se realiza en grupos de 3 a 5 integrantes.
-- El sistema debe estar desarrollado en Python y ejecutarse por consola.
-- El repositorio debe mostrar el proceso de trabajo mediante commits periodicos, no solamente una carga final.
-- La entrega digital debe incluir enlace al repositorio, archivo README y video de demostracion.
-- El video debe durar como maximo 5 minutos e incluir presentacion breve del grupo, explicacion general del sistema, un caso valido y un caso con validaciones o mensajes de error.
-- El uso de IA esta permitido como apoyo, pero todos los integrantes deben comprender y poder justificar la solucion.
-
 ## Requisitos tecnicos aplicados
 
 - Condicionales: validacion de opciones, confirmaciones y estados.
@@ -45,35 +36,6 @@ Completar comision.
 - Modularizacion basica: funciones para menu, ventas, calculos y estadisticas.
 - Manejo basico de errores: uso de `try/except` para entradas numericas invalidas.
 
-## Instrucciones de ejecucion
-
-1. Abrir una terminal en la carpeta del proyecto.
-2. Ejecutar:
-
-```bash
-python main.py
-```
-
-3. Utilizar el menu principal para operar el sistema.
-
-## Caso de prueba valido sugerido
-
-1. Elegir la opcion `2. Comprar entradas`.
-2. Ingresar un nombre y apellido valido.
-3. Ingresar un DNI de 7 u 8 numeros.
-4. Elegir el sector `CAMPO`.
-5. Comprar `4` entradas.
-6. Seleccionar la promocion `Grupo 4 o mas entradas`.
-7. Elegir un medio de pago.
-8. Confirmar la venta con `S`.
-9. Verificar la venta en la opcion `3` y las estadisticas en la opcion `4`.
-
-## Caso de prueba con validacion
-
-1. Intentar ingresar texto cuando el sistema pide una opcion numerica.
-2. Intentar comprar mas entradas que las disponibles en un sector.
-3. Intentar usar la promocion de grupo comprando menos de 4 entradas.
-4. Verificar que el sistema muestre mensajes de error y vuelva a solicitar el dato.
 
 ## Uso de Inteligencia Artificial
 
