@@ -6,9 +6,10 @@ Sistema por consola que permite administrar la venta de entradas para un recital
 
 ## Integrantes
 
-Caballero Lara
-Hanke Valentin
-Lazcano Francisco
+- Caballero Lara
+- Hanke Valentin
+- Lazcano Francisco
+- 
 
 ## Comision
 
