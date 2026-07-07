@@ -8,11 +8,27 @@ contadores y validaciones.
 """
 
 import json
+import os
 from pathlib import Path
 from datetime import datetime
 
 
+os.system("")
+
 ARCHIVO_VENTAS = Path(__file__).with_name("ventas.json")
+
+RESET = "\033[0m"
+BOLD = "\033[1m"
+CYAN = "\033[96m"
+GREEN = "\033[92m"
+YELLOW = "\033[93m"
+RED = "\033[91m"
+BLUE = "\033[94m"
+MAGENTA = "\033[95m"
+
+
+def color_texto(texto, color):
+    return f"{color}{texto}{RESET}"
 
 EVENTOS = {
     "ROCK": {
@@ -100,21 +116,21 @@ def actualizar_cupos_desde_ventas():
 
 
 def mostrar_titulo():
-    print("\n" + "=" * 60)
-    print("SISTEMA DE VENTA DE ENTRADAS PARA RECITALES")
-    print("=" * 60)
-    print("Boleteria de eventos musicales")
+    print(color_texto("\n" + "=" * 60, CYAN))
+    print(color_texto("SISTEMA DE VENTA DE ENTRADAS PARA RECITALES", BOLD + CYAN))
+    print(color_texto("=" * 60, CYAN))
+    print(color_texto("Boleteria de eventos musicales", MAGENTA))
 
 
 def mostrar_menu(codigo_evento_actual=None):
-    print("\nMenu principal")
+    print(color_texto("\nMenu principal", BOLD + BLUE))
     if codigo_evento_actual:
         evento = EVENTOS[codigo_evento_actual]
-        print(f"Evento seleccionado: {evento['nombre']} ({evento['fecha']})")
+        print(color_texto(f"Evento seleccionado: {evento['nombre']} ({evento['fecha']})", GREEN))
     else:
-        print("Evento seleccionado: ninguno")
-    print("1. Seleccionar evento y ver sectores disponibles")
-    print("2. Comprar entradas para el evento seleccionado")
+        print(color_texto("Evento seleccionado: ninguno", YELLOW))
+    print(color_texto("1. Seleccionar evento y ver sectores disponibles", CYAN))
+    print(color_texto("2. Comprar entradas para el evento seleccionado", CYAN))
     print("3. Ver ventas realizadas")
     print("4. Ver estadisticas")
     print("5. Cancelar una venta")
@@ -127,9 +143,9 @@ def pedir_opcion(minimo, maximo, mensaje="Ingrese una opcion: "):
             opcion = int(input(mensaje))
             if minimo <= opcion <= maximo:
                 return opcion
-            print(f"Error: ingrese un numero entre {minimo} y {maximo}.")
+            print(color_texto(f"Error: ingrese un numero entre {minimo} y {maximo}.", RED))
         except ValueError:
-            print("Error: debe ingresar un numero entero.")
+            print(color_texto("Error: debe ingresar un numero entero.", RED))
 
 
 def pedir_texto(mensaje, minimo=2):
@@ -137,7 +153,7 @@ def pedir_texto(mensaje, minimo=2):
         texto = input(mensaje).strip()
         if len(texto) >= minimo:
             return texto
-        print(f"Error: el texto debe tener al menos {minimo} caracteres.")
+        print(color_texto(f"Error: el texto debe tener al menos {minimo} caracteres.", RED))
 
 
 def pedir_dni():
@@ -145,14 +161,14 @@ def pedir_dni():
         dni = input("DNI del comprador: ").strip()
         if dni.isdigit() and 7 <= len(dni) <= 8:
             return dni
-        print("Error: el DNI debe contener 7 u 8 numeros.")
+        print(color_texto("Error: el DNI debe contener 7 u 8 numeros.", RED))
 
 
 def mostrar_eventos():
-    print("\nEventos disponibles")
-    print("-" * 75)
-    print(f"{'Codigo':<10}{'Evento':<28}{'Fecha':<14}{'Lugar':<20}")
-    print("-" * 75)
+    print(color_texto("\nEventos disponibles", BOLD + MAGENTA))
+    print(color_texto("-" * 75, MAGENTA))
+    print(color_texto(f"{'Codigo':<10}{'Evento':<28}{'Fecha':<14}{'Lugar':<20}", BOLD))
+    print(color_texto("-" * 75, MAGENTA))
     for codigo, evento in EVENTOS.items():
         print(f"{codigo:<10}{evento['nombre']:<28}{evento['fecha']:<14}{evento['lugar']:<20}")
 
@@ -163,16 +179,16 @@ def elegir_evento():
         codigo = input("Ingrese codigo de evento: ").strip().upper()
         if codigo in EVENTOS:
             return codigo
-        print("Error: evento inexistente.")
+        print(color_texto("Error: evento inexistente.", RED))
 
 
 def mostrar_sectores(codigo_evento):
     evento = EVENTOS[codigo_evento]
-    print("\nSectores disponibles")
-    print(f"Evento: {evento['nombre']} | Fecha: {evento['fecha']} | Lugar: {evento['lugar']}")
-    print("-" * 60)
-    print(f"{'Codigo':<10}{'Sector':<15}{'Precio':<12}{'Libres':<10}")
-    print("-" * 60)
+    print(color_texto("\nSectores disponibles", BOLD + MAGENTA))
+    print(color_texto(f"Evento: {evento['nombre']} | Fecha: {evento['fecha']} | Lugar: {evento['lugar']}", GREEN))
+    print(color_texto("-" * 60, MAGENTA))
+    print(color_texto(f"{'Codigo':<10}{'Sector':<15}{'Precio':<12}{'Libres':<10}", BOLD))
+    print(color_texto("-" * 60, MAGENTA))
     for codigo, sector in evento["sectores"].items():
         libres = sector["capacidad"] - sector["vendidas"]
         print(f"{codigo:<10}{sector['nombre']:<15}${sector['precio']:<11.2f}{libres:<10}")
@@ -185,9 +201,9 @@ def elegir_sector(codigo_evento):
         if codigo in EVENTOS[codigo_evento]["sectores"]:
             if lugares_disponibles(codigo_evento, codigo) > 0:
                 return codigo
-            print("Error: ese sector no tiene lugares disponibles.")
+            print(color_texto("Error: ese sector no tiene lugares disponibles.", RED))
         else:
-            print("Error: sector inexistente.")
+            print(color_texto("Error: sector inexistente.", RED))
 
 
 def lugares_disponibles(codigo_evento, codigo_sector):
@@ -202,13 +218,13 @@ def pedir_cantidad(codigo_evento, codigo_sector):
             cantidad = int(input(f"Cantidad de entradas (1 a {disponibles}): "))
             if 1 <= cantidad <= disponibles:
                 return cantidad
-            print("Error: cantidad invalida o superior a la capacidad disponible.")
+            print(color_texto("Error: cantidad invalida o superior a la capacidad disponible.", RED))
         except ValueError:
-            print("Error: debe ingresar un numero entero.")
+            print(color_texto("Error: debe ingresar un numero entero.", RED))
 
 
 def mostrar_promociones():
-    print("\nPromociones")
+    print(color_texto("\nPromociones", BOLD + BLUE))
     codigos = list(PROMOCIONES.keys())
     for indice, codigo in enumerate(codigos, start=1):
         promo = PROMOCIONES[codigo]
@@ -223,13 +239,13 @@ def elegir_promocion(cantidad):
         opcion = pedir_opcion(1, len(codigos), "Seleccione promocion: ")
         codigo = codigos[opcion - 1]
         if codigo == "GRUPO" and cantidad < 4:
-            print("Error: la promocion de grupo requiere comprar 4 o mas entradas.")
+            print(color_texto("Error: la promocion de grupo requiere comprar 4 o mas entradas.", RED))
         else:
             return codigo
 
 
 def elegir_medio_pago():
-    print("\nMedios de pago")
+    print(color_texto("\nMedios de pago", BOLD + BLUE))
     for indice, medio in enumerate(MEDIOS_PAGO, start=1):
         print(f"{indice}. {medio.title()}")
     opcion = pedir_opcion(1, len(MEDIOS_PAGO), "Seleccione medio de pago: ")
@@ -249,10 +265,10 @@ def generar_codigo_venta():
 
 
 def comprar_entradas(codigo_evento):
-    print("\nNueva venta")
+    print(color_texto("\nNueva venta", BOLD + GREEN))
     evento = EVENTOS[codigo_evento]
-    print(f"Evento seleccionado: {evento['nombre']}")
-    print(f"Fecha: {evento['fecha']} | Lugar: {evento['lugar']}")
+    print(color_texto(f"Evento seleccionado: {evento['nombre']}", GREEN))
+    print(color_texto(f"Fecha: {evento['fecha']} | Lugar: {evento['lugar']}", GREEN))
     comprador = pedir_texto("Nombre y apellido del comprador: ")
     dni = pedir_dni()
     codigo_sector = elegir_sector(codigo_evento)
@@ -262,7 +278,7 @@ def comprar_entradas(codigo_evento):
 
     subtotal, descuento, total = calcular_importes(codigo_evento, codigo_sector, cantidad, codigo_promocion)
 
-    print("\nResumen de compra")
+    print(color_texto("\nResumen de compra", BOLD + YELLOW))
     print(f"Comprador: {comprador} | DNI: {dni}")
     print(f"Evento: {EVENTOS[codigo_evento]['nombre']}")
     print(f"Fecha: {EVENTOS[codigo_evento]['fecha']} | Lugar: {EVENTOS[codigo_evento]['lugar']}")
@@ -274,7 +290,7 @@ def comprar_entradas(codigo_evento):
 
     confirmar = input("Confirmar venta? (S/N): ").strip().upper()
     if confirmar != "S":
-        print("Venta cancelada por el usuario.")
+        print(color_texto("Venta cancelada por el usuario.", YELLOW))
         return
 
     venta = {
@@ -295,13 +311,13 @@ def comprar_entradas(codigo_evento):
     ventas.append(venta)
     EVENTOS[codigo_evento]["sectores"][codigo_sector]["vendidas"] += cantidad
     guardar_ventas()
-    print(f"Venta registrada correctamente. Codigo: {venta['codigo']}")
+    print(color_texto(f"Venta registrada correctamente. Codigo: {venta['codigo']}", GREEN))
 
 
 def listar_ventas():
-    print("\nVentas realizadas")
+    print(color_texto("\nVentas realizadas", BOLD + BLUE))
     if not ventas:
-        print("No hay ventas registradas.")
+        print(color_texto("No hay ventas registradas.", YELLOW))
         return
 
     for venta in ventas:
@@ -323,7 +339,7 @@ def listar_ventas():
 
 def cancelar_venta():
     if not ventas:
-        print("\nNo hay ventas para cancelar.")
+        print(color_texto("\nNo hay ventas para cancelar.", YELLOW))
         return
 
     listar_ventas()
@@ -331,7 +347,7 @@ def cancelar_venta():
     for venta in ventas:
         if venta["codigo"] == codigo:
             if venta["estado"] == "CANCELADA":
-                print("Error: esa venta ya estaba cancelada.")
+                print(color_texto("Error: esa venta ya estaba cancelada.", RED))
                 return
             venta["estado"] = "CANCELADA"
             codigo_evento = venta.get("evento")
@@ -339,9 +355,9 @@ def cancelar_venta():
             if codigo_evento in EVENTOS and codigo_sector in EVENTOS[codigo_evento]["sectores"]:
                 EVENTOS[codigo_evento]["sectores"][codigo_sector]["vendidas"] -= venta["cantidad"]
             guardar_ventas()
-            print("Venta cancelada y cupos liberados correctamente.")
+            print(color_texto("Venta cancelada y cupos liberados correctamente.", GREEN))
             return
-    print("Error: no se encontro una venta con ese codigo.")
+    print(color_texto("Error: no se encontro una venta con ese codigo.", RED))
 
 
 def obtener_ventas_activas():
@@ -370,10 +386,10 @@ def calcular_sector_mas_demandado(ventas_activas):
 
 def mostrar_estadisticas():
     ventas_activas = obtener_ventas_activas()
-    print("\nEstadisticas de ventas")
-    print("-" * 60)
+    print(color_texto("\nEstadisticas de ventas", BOLD + BLUE))
+    print(color_texto("-" * 60, BLUE))
     if not ventas_activas:
-        print("Todavia no hay ventas activas para analizar.")
+        print(color_texto("Todavia no hay ventas activas para analizar.", YELLOW))
         return
 
     entradas_vendidas = 0
@@ -406,9 +422,9 @@ def mostrar_estadisticas():
         f"{evento_mayor['nombre']} - {sector_mayor['nombre']} ({cantidad_sector} entradas)"
     )
 
-    print("\nDetalle por evento y sector")
+    print(color_texto("\nDetalle por evento y sector", BOLD + MAGENTA))
     for evento in EVENTOS.values():
-        print(f"\n{evento['nombre']} ({evento['fecha']} - {evento['lugar']})")
+        print(color_texto(f"\n{evento['nombre']} ({evento['fecha']} - {evento['lugar']})", MAGENTA))
         for sector in evento["sectores"].values():
             vendidas = sector["vendidas"]
             libres = sector["capacidad"] - vendidas
@@ -434,7 +450,7 @@ def ejecutar_sistema():
             mostrar_sectores(codigo_evento_actual)
         elif opcion == 2:
             if codigo_evento_actual is None:
-                print("\nPrimero debe seleccionar un evento desde la opcion 1.")
+                print(color_texto("\nPrimero debe seleccionar un evento desde la opcion 1.", YELLOW))
             else:
                 comprar_entradas(codigo_evento_actual)
         elif opcion == 3:
@@ -444,7 +460,7 @@ def ejecutar_sistema():
         elif opcion == 5:
             cancelar_venta()
         elif opcion == 6:
-            print("Gracias por utilizar el sistema. Hasta luego.")
+            print(color_texto("Gracias por utilizar el sistema. Hasta luego.", GREEN))
             break
 
 
